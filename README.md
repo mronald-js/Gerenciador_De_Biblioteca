@@ -22,6 +22,7 @@ Extraia os arquivos
 Serão geradas duas Pastas, uma nomeada "lib_manager_users" essa contém o arquivo referente a aplicação para usuários da biblioteca
 Outra nomeada "lib_manager_admin" essa contém o arquivo referente a aplicação para administradores da biblioteca
 Execute o arquivo executavel
+OBSS!! Caso esteja usando linux, compile o arquivo main.c com gcc e execute o arquivo!
 
 ### Como usar ?
 
