@@ -17,6 +17,43 @@ void salvarDados() {
     fclose(fp);
 }
 
+void limparbuffer(){
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
+}
+
+void registrarUsuario(int opcao) {
+
+    char nome[100], senha[20];
+    int usuarioJaExistente, counter = 0;
+    
+    do {
+        usuarioJaExistente = 0;
+        printf("Digite seu nome de usuario: ");
+        fgets(nome, 100, stdin);
+        substitui(nome);
+        
+        do {
+            if(counter > 0)
+                printf("Senha invalida!\nDigite novamente!\n");
+            else
+                printf("\nDigite sua senha (6-20 caracteres): ");
+            fgets(senha, 20, stdin);
+            substitui(senha);
+            counter++;
+        } while(strlen(senha) < 6 || strlen(senha) > 20);
+        counter = 0;
+
+        autenticarAssociado(nome, senha, 0);
+
+    } while(usuarioJaExistente);
+
+    char plano = opcao == 1 ? 'A' : 'B';
+    addAssociado(nome, senha, plano);
+    salvarDados();
+    printf("\nUSUARIO %s REGISTRADO COM SUCESSO!\n", nome);
+}
+
 void carregarDados() {
     FILE *fp;
     fp = fopen("users/dados.txt", "r");
@@ -24,7 +61,7 @@ void carregarDados() {
         return;
     }
     while(!feof(fp)) {
-        struct Associado novoAssociado;
+        Associado novoAssociado;
         fscanf(fp, "%[^,],%[^,],%c\n", novoAssociado.nome, novoAssociado.senha, &novoAssociado.plano);
         associados[numAssociados++] = novoAssociado;
     }
@@ -40,7 +77,7 @@ void bemVindo(){
 
 // Interface de usuário
 void exibirMenu() {
-        printf("Por Gentileza Cadastra-se No Sistema\n\n");
+        printf("Por Gentileza Cadastra-se No Sistema\n");
         printf("(Cadastrar como associado - assinatura mensal) Digite 1\n(Cadastrar conta basica - gratuito) Digite 2   \n");
         printf("\nDigite 3 se ja tiver cadastro; Digite 0 para sair\n");
 }

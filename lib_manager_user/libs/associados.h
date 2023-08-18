@@ -6,41 +6,37 @@
 
 #define MAX_ASSOCIADOS 100
 
-//struct que guarda os associados
-struct Associado {
+// Estrutura para representar um associado
+typedef struct {
     char nome[100];
     char senha[20];
     char plano;
-};
+} Associado;
 
-struct Associado associados[MAX_ASSOCIADOS];
+Associado associados[MAX_ASSOCIADOS];
 int numAssociados = 0;
 
-//função que adiciona os associados
-struct Associado addAssociado(char nome[], char senha[], char plano){
-
-    struct Associado novoAssociado;
+// Adiciona um novo associado à lista
+Associado addAssociado(char nome[], char senha[], char plano) {
+    Associado novoAssociado;
 
     strcpy(novoAssociado.nome, nome);
     strcpy(novoAssociado.senha, senha);
     novoAssociado.plano = plano;
 
-    //Armaneza o novo associado na lista de associados
     associados[numAssociados++] = novoAssociado;
 
     return novoAssociado;
-    
 }
 
-//função para saber se o nome do associado digitado já nao existe
-struct Associado *buscarAssociado(char nome[]) {
+// Busca um associado pelo nome no arquivo de dados
+Associado* buscarAssociadoPorNome(char nome[]) {
     FILE *fp = fopen("users/dados.txt", "r");
-    if (fp == NULL) {
-        //caso o arquivo não exista
-        return NULL;
+    if (!fp) {
+        return NULL; // Arquivo não encontrado
     }
 
-    struct Associado *associadoEncontrado = malloc(sizeof(struct Associado));
+    Associado* associadoEncontrado = (Associado*) malloc(sizeof(Associado));
     char nomeArquivo[100];
     char senha[100];
     char plano;
@@ -57,56 +53,37 @@ struct Associado *buscarAssociado(char nome[]) {
 
     fclose(fp);
     free(associadoEncontrado);
-    return NULL; //caso o usuario não tenha sido encontrado
+    return NULL; // Associado não encontrado
 }
 
+// Autentica um associado com base no nome e senha fornecidos
+int autenticarAssociado(char nome[], char senha[], int logado) {
+    Associado* associado = buscarAssociadoPorNome(nome);
 
-int carregarAssociado(const char *nomeProcurado, const char *senhaProcurada) {
-    FILE *fp;
-    fp = fopen("users/dados.txt", "r");
-    if (fp == NULL) {
-        return 0; // Retorna 0 para indicar que o arquivo não foi encontrado
-    }
-    char nome[100];
-    char senha[100];
-    char plano;
-    while (fscanf(fp, "%[^,],%[^,],%c\n", nome, senha, &plano) != EOF) {
-        if (strcmp(nome, nomeProcurado) == 0 && strcmp(senha, senhaProcurada) == 0) {
-            fclose(fp);
-            return 1; // Retorna 1 para indicar sucesso (associado autenticado)
+    // Se o usuário estiver tentando se registrar
+    if (logado == 0) {
+        if (associado) {
+            printf("O nome de usuario %s já está em uso. Por favor, escolha outro nome.\n", nome);
+            free(associado);
+            return -1;  // Nome de usuário já em uso
         }
-    }
-    fclose(fp);
-    return -1; // Retorna -1 para indicar que o associado não foi encontrado
-}
-
-
-
-int autenticarAssociado(char nome[], char senha[], int logado){
-
-    struct Associado *associado = buscarAssociado(nome);
-
-    //caso o status de logado seja 0 significa que o usuario ainda está cadastrado
-    if(logado == 0){
-        if (associado != NULL) { // Verifica se o associado foi encontrado
-            if ((strcmp(associado->senha, senha) == 0) && strcmp(associado->nome, nome) == 0) {
-                printf("Autenticação bem-sucedida para o Usuario: %s\n", nome);
-                return 1; // registro bem-sucedido
-            } else
-                return -1; // registro falhou
-
-    } else if(logado == 1){//caso seja 1 segnifica que ele já tem cadastro e esta tentado realizar login
-        if(carregarAssociado(nome, senha) == -1) {
+        return 1;  // Registro bem-sucedido
+    } 
+    // Se o usuário estiver tentando fazer login
+    else if (logado == 1) {
+        if (!associado) {
             printf("Usuario %s não cadastrado\n", nome);
             return -1;
-        }
-        else if(strcmp(associado->senha, senha) != 0) {
+        } else if (strcmp(associado->senha, senha) != 0) {
             printf("Senha Incorreta\nDigite novamente!\n");
+            free(associado);
             return -1;
-        }
-        else return 1;
+        } else {
+            free(associado);
+            return 1;  // Autenticação bem-sucedida
         }
     }
+    return -1;  // Para quaisquer outros casos imprevistos
 }
 
-#endif // ASSOCIADO_H
+#endif  // ASSOCIADO_H
