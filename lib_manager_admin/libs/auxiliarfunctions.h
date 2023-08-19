@@ -4,8 +4,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void substitui(char *vetor) {
-    vetor[strcspn(vetor, "\n")] = '\0';
+void substitui(char *vetor){
+    vetor[strcspn(vetor, "\n")] = '\0'; //troca o último \n por um caracter nulo, dessa forma evitando que o \n fique no buffer
+}
+
+int getTarefa() {
+    int tarefa;
+    do {
+        scanf("%d", &tarefa);
+    } while (tarefa < 0 || tarefa > 3);
+    return tarefa;
+}
+
+void menuPrincipal() {
+    printf("Menu Principal:\n");
+    printf("1 - Registrar\n");
+    printf("2 - Login\n");
+    printf("0 - Sair\n");
+}
+
+
+void menuLogado(char *nome) {
+    printf("\nAtualmente logado como \033[32m%s\033[0m", nome);
+    printf("\nOpcoes:\n");
+    printf("1 - Cadastrar livro\n");
+    printf("2 - Verificar Estoque\n");
+    printf("3 - Limpar terminal\n");
+    printf("0 - Logout\n");
 }
 
 void salvarDados() {
@@ -17,6 +42,52 @@ void salvarDados() {
     fclose(fp);
 }
 
+void limparbuffer(){
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
+}
+
+int getOpcao() {
+    int opcao;
+    do {
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+        limparbuffer();
+    } while (opcao < 0 || opcao > 3);
+    return opcao;
+}
+
+void registrarAdm(int opcao) {
+
+    char nome[100], senha[20];
+    int usuarioJaExistente, counter = 0;
+    
+    do {
+        usuarioJaExistente = 0;
+        printf("ADM: ");
+        fgets(nome, 100, stdin);
+        substitui(nome);
+        
+        do {
+            if(counter > 0)
+                printf("Senha invalida!\nDigite novamente!\n");
+            else
+                printf("\nDigite sua senha (6-20 caracteres): ");
+            fgets(senha, 20, stdin);
+            substitui(senha);
+            counter++;
+        } while(strlen(senha) < 6 || strlen(senha) > 20);
+        counter = 0;
+
+        autenticarAdmin(nome, senha, 0);
+
+    } while(usuarioJaExistente);
+
+    addAdm(nome, senha);
+    salvarDados();
+    printf("\nADMIN \033[032m%s\033[0m registrado com sucesso!\n", nome);
+}
+
 void carregarDados() {
     FILE *fp;
     fp = fopen("admins/dados.txt", "r");
@@ -24,9 +95,9 @@ void carregarDados() {
         return;
     }
     while(!feof(fp)) {
-        struct ADMIN novoAdmin;
-        fscanf(fp, "%[^,],%[^\n]\n", novoAdmin.nome, novoAdmin.senha);
-        admins[numAdmins++] = novoAdmin;
+        Administrador novoADM;
+        fscanf(fp, "%[^,],%^[\n]", novoADM.nome, novoADM.senha);
+        admins[numAdmins++] = novoADM;
     }
     fclose(fp);
 }
@@ -35,13 +106,6 @@ void carregarDados() {
 
 void bemVindo(){
     printf("\n\nSeja Bem Vindo a [NOME DA BIBLIOTECA]!\n\n");
-}
-
-
-// Interface de usuário
-void exibirMenu() {
-        printf("(Para Cadastrar Admin) Digite 1\n(Para Logar como admin) Digite 2\n");
-        printf("Digite 0 para sair\n");
 }
 
 //Apenas uma arte para exibir o nome do programa (pode ignorar essa função);
@@ -70,4 +134,4 @@ void limparTela() {
     system("clear"); // para Linux ou macOS
     libManager();
 }
-#endif
+#endif // ASSOCIADO_H

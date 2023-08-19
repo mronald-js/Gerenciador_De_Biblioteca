@@ -6,102 +6,77 @@
 
 #define MAX_ADMINS 10
 
-//struct que guarda os admins
-struct ADMIN {
+typedef struct {
     char nome[100];
     char senha[20];
-};
+} Administrador;
 
-struct ADMIN admins[MAX_ADMINS];
+Administrador admins[MAX_ADMINS];
 int numAdmins = 0;
 
-//função que adiciona os admins
-struct ADMIN addAdmin(char nome[], char senha[]){
-
-    struct ADMIN novoAdmin;
-
-    strcpy(novoAdmin.nome, nome);
-    strcpy(novoAdmin.senha, senha);
-
-    //Armaneza o novo admin na lista de admins
-    admins[numAdmins++] = novoAdmin;
-
-    return novoAdmin;
-    
+Administrador addAdm(char nome[], char senha[]) {
+    Administrador novoAdm;
+    strcpy(novoAdm.nome, nome);
+    strcpy(novoAdm.senha, senha);
+    admins[numAdmins++] = novoAdm;
+    return novoAdm;
 }
 
-//função para saber se o nome do admin digitado já nao existe
-struct ADMIN *buscarAdmin(char nome[]) {
+Administrador* buscaAdmPorNome(char *nome) {
+    
     FILE *fp = fopen("admins/dados.txt", "r");
-    if (fp == NULL) {
-        //caso o arquivo não exista
+    if(!fp) {
         return NULL;
     }
 
-    struct ADMIN *adminEncontrado = malloc(sizeof(struct ADMIN));
+    Administrador* admEncontrado = (Administrador*) malloc(sizeof(Administrador));
     char nomeArquivo[100];
     char senha[100];
 
-    while (fscanf(fp, "%[^,],%[^\n]\n", nomeArquivo, senha) != EOF) {
+    while(fscanf(fp, "%[^,],%[^\n]", nomeArquivo, senha) != EOF) {
+        
         if (strcmp(nomeArquivo, nome) == 0) {
-            strcpy(adminEncontrado->nome, nomeArquivo);
-            strcpy(adminEncontrado->senha, senha);
+
+            strcpy(admEncontrado->nome, nomeArquivo);
+            strcpy(admEncontrado->senha, senha);
+
             fclose(fp);
-            return adminEncontrado;
+            return admEncontrado;
         }
     }
 
     fclose(fp);
-    free(adminEncontrado);
-    return NULL; //caso o usuario não tenha sido encontrado
+    free(admEncontrado);
+    return NULL;
+
 }
 
+int autenticarAdmin(char nome[], char senha[], int logado) {
+    
+    Administrador* adm = buscaAdmPorNome(nome);
 
-int carregarAdmin(const char *nomeProcurado, const char *senhaProcurada) {
-    FILE *fp;
-    fp = fopen("admins/dados.txt", "r");
-    if (fp == NULL) {
-        return 0; // Retorna 0 para indicar que o arquivo não foi encontrado
-    }
-    char nome[100];
-    char senha[100];
-    while (fscanf(fp, "%[^,],%[^\n]\n", nome, senha) != EOF) {
-        if (strcmp(nome, nomeProcurado) == 0 && strcmp(senha, senhaProcurada) == 0) {
-            fclose(fp);
-            return 1; // Retorna 1 para indicar sucesso (associado autenticado)
-        }
-    }
-    fclose(fp);
-    return -1; // Retorna -1 para indicar que o admin não foi encontrado
-}
-
-
-
-int autenticarAdmin(char nome[], char senha[], int logado){
-
-    struct ADMIN *admin = buscarAdmin(nome);
-
-    //caso o status de logado seja 0 significa que o usuario ainda está cadastrado
-    if(logado == 0){
-        if (admin != NULL) { // Verifica se o admin foi encontrado
-            if ((strcmp(admin->senha, senha) == 0) && strcmp(admin->nome, nome) == 0) {
-                printf("Autenticação bem-sucedida para o Usuario: %s\n", nome);
-                return 1; // registro bem-sucedido
-            } else
-                return -1; // registro falhou
-
-    } else if(logado == 1){//caso seja 1 segnifica que ele já tem cadastro e esta tentado realizar login
-        if(carregarAdmin(nome, senha) == -1) {
-            printf("Usuario %s não cadastrado\n", nome);
+    if (logado == 0) {
+        if (adm) {
+            printf("O nome de administrador %s já está em uso. Por favor, escolha outro nome.\n", nome);
+            free(adm);
             return -1;
         }
-        else if(strcmp(admin->senha, senha) != 0) {
+        return 1;  // Registro bem-sucedido
+    } 
+    else if (logado == 1) {
+        if (!adm) {
+            printf("Adm %s não cadastrado\n", nome);
+            return -1;
+        } else if (strcmp(adm->senha, senha) != 0) {
             printf("Senha Incorreta\nDigite novamente!\n");
+            free(adm);
             return -1;
-        }
-        else return 1;
+        } else {
+            free(adm);
+            return 1;  // Autenticação bem-sucedida
         }
     }
+    return -1;  // Para quaisquer outros casos imprevistos
 }
 
 #endif
