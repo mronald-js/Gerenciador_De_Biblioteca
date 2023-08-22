@@ -28,7 +28,7 @@ void menuPrincipal() {
 void menuLogado(char *nome, char plano) {
     printf("\nAtualmente logado como \033[32m%s\033[0m | PLANO \033[31m%c\033[0m\n", nome, plano);
     printf("\nOpcoes:\n");
-    printf("1 - Buscar livro\n");
+    printf("1 - Exibir Livros\n");
     printf("2 - Solicitar Emprestimo\n");
     printf("3 - Limpar terminal\n");
     printf("0 - Logout\n");
@@ -44,13 +44,6 @@ void salvarDados() {
     }
     fclose(fp);
 }
-
-//função especifica que limpa o buffer depois da chamada de um scanf
-void limparbuffer(){
-    int ch;
-    while ((ch = getchar()) != '\n' && ch != EOF);
-}
-
 //funcao que le uma opcao especifica escolhida pelo usuario de acordo com os menu
 int getOpcao() {
     int opcao;
