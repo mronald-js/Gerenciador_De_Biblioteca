@@ -24,7 +24,6 @@ void menuPrincipal() {
     printf("0 - Sair\n");
 }
 
-
 void menuLogado(char *nome, char plano) {
     printf("\nAtualmente logado como \033[32m%s\033[0m | PLANO \033[31m%c\033[0m\n", nome, plano);
     printf("\nOpcoes:\n");
@@ -61,28 +60,25 @@ int getOpcao() {
 void registrarUsuario(int opcao) {
 
     char nome[100], senha[20];
-    int usuarioJaExistente, counter = 0;
+    int counter = 0;
     
     do {
-        usuarioJaExistente = 0;
         printf("Digite seu nome de usuario: ");
         fgets(nome, 100, stdin);
         substitui(nome);
-        
         do {
             if(counter > 0)
                 printf("Senha invalida!\nDigite novamente!\n");
             else
-                printf("\nDigite sua senha (6-20 caracteres): ");
+                printf("Digite sua senha (6-20 caracteres): ");
             fgets(senha, 20, stdin);
             substitui(senha);
             counter++;
         } while(strlen(senha) < 6 || strlen(senha) > 20);
+
         counter = 0;
 
-        autenticarAssociado(nome, senha, 0);
-
-    } while(usuarioJaExistente);
+    } while(autenticarAssociado(nome, senha, 0) != 1);
 
     char plano = opcao == 1 ? 'A' : 'B';
     addAssociado(nome, senha, plano);
@@ -109,7 +105,6 @@ void carregarDados() {
 void bemVindo(){
     printf("\n\nSeja Bem Vindo a [NOME DA BIBLIOTECA]!\n\n");
 }
-
 
 // Interface de usuário
 void exibirMenu() {

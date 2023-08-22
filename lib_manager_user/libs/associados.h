@@ -71,7 +71,7 @@ int autenticarAssociado(char nome[], char senha[], int logado) {
     // Se o usuário estiver tentando se registrar
     if (logado == 0) {
         if (associado) {
-            printf("O nome de usuario %s já está em uso. Por favor, escolha outro nome.\n", nome);
+            printf("\nUsuario %s ja registrado, tente novamente\n\n!", nome);
             free(associado);
             return -1;  // Nome de usuário já em uso
         }
