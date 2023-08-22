@@ -1,6 +1,3 @@
-#ifndef ADMIN_H
-#define ADMIN_H
-
 #include <string.h>
 #include <stdlib.h>
 
@@ -57,7 +54,7 @@ int autenticarAdmin(char nome[], char senha[], int logado) {
 
     if (logado == 0) {
         if (adm) {
-            printf("O nome de administrador %s já está em uso. Por favor, escolha outro nome.\n", nome);
+            printf("O nome de administrador %s ja este em uso. Por favor, escolha outro nome.\n", nome);
             free(adm);
             return -1;
         }
@@ -78,5 +75,3 @@ int autenticarAdmin(char nome[], char senha[], int logado) {
     }
     return -1;  // Para quaisquer outros casos imprevistos
 }
-
-#endif

@@ -1,6 +1,3 @@
-#ifndef AUXILIAR_FUNC_H
-#define AUXILIAR_FUNC_H
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -72,7 +69,7 @@ void registrarAdm(int opcao) {
             if(counter > 0)
                 printf("Senha invalida!\nDigite novamente!\n");
             else
-                printf("\nDigite sua senha (6-20 caracteres): ");
+                printf("Digite sua senha (6-20 caracteres): ");
             fgets(senha, 20, stdin);
             substitui(senha);
             counter++;
@@ -132,4 +129,3 @@ void limparTela() {
     system("clear"); // para Linux ou macOS
     libManager();
 }
-#endif // ASSOCIADO_H
