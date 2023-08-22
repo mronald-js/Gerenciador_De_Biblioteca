@@ -79,9 +79,7 @@ void registrarAdm(int opcao) {
         } while(strlen(senha) < 6 || strlen(senha) > 20);
         counter = 0;
 
-        autenticarAdmin(nome, senha, 0);
-
-    } while(usuarioJaExistente);
+    } while(autenticarAdmin(nome, senha, 0) != 1);
 
     addAdm(nome, senha);
     salvarDados();
