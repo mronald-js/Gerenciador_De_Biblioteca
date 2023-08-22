@@ -20,7 +20,6 @@ Administrador addAdm(char nome[], char senha[]) {
 }
 
 Administrador* buscaAdmPorNome(char *nome) {
-    
     FILE *fp = fopen("admins/dados.txt", "r");
     if(!fp) {
         return NULL;
@@ -31,12 +30,9 @@ Administrador* buscaAdmPorNome(char *nome) {
     char senha[100];
 
     while(fscanf(fp, "%[^,],%[^\n]", nomeArquivo, senha) != EOF) {
-        
         if (strcmp(nomeArquivo, nome) == 0) {
-
             strcpy(admEncontrado->nome, nomeArquivo);
             strcpy(admEncontrado->senha, senha);
-
             fclose(fp);
             return admEncontrado;
         }
@@ -45,7 +41,6 @@ Administrador* buscaAdmPorNome(char *nome) {
     fclose(fp);
     free(admEncontrado);
     return NULL;
-
 }
 
 int autenticarAdmin(char nome[], char senha[], int logado) {
@@ -73,5 +68,6 @@ int autenticarAdmin(char nome[], char senha[], int logado) {
             return 1;  // Autenticação bem-sucedida
         }
     }
+    free(adm);
     return -1;  // Para quaisquer outros casos imprevistos
 }

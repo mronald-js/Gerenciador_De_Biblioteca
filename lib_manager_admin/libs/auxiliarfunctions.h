@@ -9,6 +9,7 @@ int getTarefa() {
     int tarefa;
     do {
         scanf("%d", &tarefa);
+        limparbuffer();
     } while (tarefa < 0 || tarefa > 3);
     return tarefa;
 }
@@ -24,8 +25,8 @@ void menuPrincipal() {
 void menuLogado(char *nome) {
     printf("\nAtualmente logado como \033[32m%s\033[0m", nome);
     printf("\nOpcoes:\n");
-    printf("1 - Cadastrar livro\n");
-    printf("2 - Verificar Estoque\n");
+    printf("1 - Cadastrar Livros\n");
+    printf("2 - Verificar Livros Cadastrados\n");
     printf("3 - Limpar terminal\n");
     printf("0 - Logout\n");
 }
@@ -39,11 +40,6 @@ void salvarDados() {
     fclose(fp);
 }
 
-void limparbuffer(){
-    int ch;
-    while ((ch = getchar()) != '\n' && ch != EOF);
-}
-
 int getOpcao() {
     int opcao;
     do {
@@ -54,34 +50,43 @@ int getOpcao() {
     return opcao;
 }
 
+int adminExistente(char *nome) {
+    Administrador* adm = buscaAdmPorNome(nome);
+    if (adm != NULL) {
+        free(adm);
+        return 1; // Admin exists
+    }
+    return 0; // Admin does not exist
+}
+
 void registrarAdm(int opcao) {
 
-    char nome[100], senha[20];
-    int usuarioJaExistente, counter = 0;
+    char nome[100], senha[50];
+    int counter = 0;
     
     do {
-        usuarioJaExistente = 0;
+
         printf("ADM: ");
         fgets(nome, 100, stdin);
         substitui(nome);
-        
+
         do {
-            if(counter > 0)
-                printf("Senha invalida!\nDigite novamente!\n");
-            else
-                printf("Digite sua senha (6-20 caracteres): ");
-            fgets(senha, 20, stdin);
+            if(counter > 0) printf("Senha invalida!\nDigite novamente!\n");
+            else printf("Digite sua senha (6-20 caracteres): ");
+            fgets(senha, 50, stdin);
             substitui(senha);
             counter++;
-        } while(strlen(senha) < 6 || strlen(senha) > 20);
+        } while(strlen(senha) < 6 || strlen(senha) > 50);
+
         counter = 0;
 
     } while(autenticarAdmin(nome, senha, 0) != 1);
 
     addAdm(nome, senha);
     salvarDados();
-    printf("\nADMIN \033[032m%s\033[0m registrado com sucesso!\n", nome);
+    printf("Adm %s registrado com sucesso!\n", nome);
 }
+
 
 void carregarDados() {
     FILE *fp;
@@ -91,7 +96,7 @@ void carregarDados() {
     }
     while(!feof(fp)) {
         Administrador novoADM;
-        fscanf(fp, "%[^,],%^[\n]", novoADM.nome, novoADM.senha);
+        fscanf(fp, "%[^,],%[^\n]", novoADM.nome, novoADM.senha);
         admins[numAdmins++] = novoADM;
     }
     fclose(fp);

@@ -7,7 +7,9 @@
 
 //bibliotecas locais
 #include "libs/admins.h"
+#include "libs/livro.h"
 #include "libs/auxiliarfunctions.h"
+#include "libs/emprestimo.h"
 
 int main(){
 
@@ -39,13 +41,13 @@ int main(){
             Administrador *adm = buscaAdmPorNome(nome);
 
             if(adm == NULL) {
-                printf("\nADMNISTRADOR INEXISTENTE!!\n");
+                printf("ADMNISTRADOR INEXISTENTE!!\n\n");
                 continue;
             }
 
             char senhaInserida[20];
             
-            printf("\nDigite sua senha: ");
+            printf("Digite sua senha: ");
             fgets(senhaInserida, 20, stdin);
             substitui(senhaInserida);
 
@@ -63,6 +65,18 @@ int main(){
                 int tarefa = getTarefa();
 
                 if (tarefa == 0) logado = 0;
+
+                if(tarefa == 1) {
+                    cadlivro();
+                    continue;
+                }
+
+                if(tarefa == 2) {
+                    carregarLivros();
+                    listar(qntd_livros);
+                    continue;
+                }
+
                 if (tarefa == 3) limparTela();
 
             }
