@@ -1,13 +1,14 @@
-#ifndef AUXILIAR_FUNC_H
-#define AUXILIAR_FUNC_H
+//Esse arquivo supõe-se ser para as funções auxiliares
 
 #include <stdio.h>
 #include <stdlib.h>
 
+//troca o último \n por um caracter nulo, dessa forma evitando que o \n fique no buffer
 void substitui(char *vetor){
-    vetor[strcspn(vetor, "\n")] = '\0'; //troca o último \n por um caracter nulo, dessa forma evitando que o \n fique no buffer
+    vetor[strcspn(vetor, "\n")] = '\0'; 
 }
 
+//função que lê e retorna a opcao da tarefa desejada
 int getTarefa() {
     int tarefa;
     do {
@@ -33,6 +34,8 @@ void menuLogado(char *nome, char plano) {
     printf("0 - Logout\n");
 }
 
+//função que salva os dados dos usuarios num arquivo users/dados.txt
+//ele salva, o nome, a senha e o plano dos associados
 void salvarDados() {
     FILE *fp;
     fp = fopen("users/dados.txt", "w");
@@ -42,11 +45,13 @@ void salvarDados() {
     fclose(fp);
 }
 
+//função especifica que limpa o buffer depois da chamada de um scanf
 void limparbuffer(){
     int ch;
     while ((ch = getchar()) != '\n' && ch != EOF);
 }
 
+//funcao que le uma opcao especifica escolhida pelo usuario de acordo com os menu
 int getOpcao() {
     int opcao;
     do {
@@ -57,20 +62,21 @@ int getOpcao() {
     return opcao;
 }
 
+//funcao que registra o usuario
 void registrarUsuario(int opcao) {
 
     char nome[100], senha[20];
     int counter = 0;
     
     do {
+
         printf("Digite seu nome de usuario: ");
         fgets(nome, 100, stdin);
         substitui(nome);
+
         do {
-            if(counter > 0)
-                printf("Senha invalida!\nDigite novamente!\n");
-            else
-                printf("Digite sua senha (6-20 caracteres): ");
+            if(counter > 0) printf("Senha invalida!\nDigite novamente!\n");
+            else printf("Digite sua senha (6-20 caracteres): ");
             fgets(senha, 20, stdin);
             substitui(senha);
             counter++;
@@ -139,4 +145,3 @@ void limparTela() {
     system("clear"); // para Linux ou macOS
     libManager();
 }
-#endif // ASSOCIADO_H

@@ -1,6 +1,4 @@
-#ifndef ASSOCIADO_H
-#define ASSOCIADO_H
-
+//Esse arquivo supõe-se ser para a funcionalidade dos associados
 #include <string.h>
 #include <stdlib.h>
 
@@ -93,5 +91,3 @@ int autenticarAssociado(char nome[], char senha[], int logado) {
     }
     return -1;  // Para quaisquer outros casos imprevistos
 }
-
-#endif  // ASSOCIADO_H
