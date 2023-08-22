@@ -84,7 +84,7 @@ void cadlivro() {
         limparbuffer();
 
 
-        printf("Livro %s Adicionado a biblioteca!\n", livros);
+        printf("Livro %s Adicionado a biblioteca!\n", titulo);
         addLivro(titulo, id, autor);
     }
 
