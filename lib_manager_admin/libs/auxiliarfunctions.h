@@ -10,7 +10,7 @@ int getTarefa() {
     do {
         scanf("%d", &tarefa);
         limparbuffer();
-    } while (tarefa < 0 || tarefa > 3);
+    } while (tarefa < 0 || tarefa > 4);
     return tarefa;
 }
 
@@ -23,11 +23,12 @@ void menuPrincipal() {
 
 
 void menuLogado(char *nome) {
-    printf("\nAtualmente logado como \033[32m%s\033[0m", nome);
+    printf("\nAtualmente logado como \033[32m%s\033[0m\n", nome);
     printf("\nOpcoes:\n");
     printf("1 - Cadastrar Livros\n");
     printf("2 - Verificar Livros Cadastrados\n");
-    printf("3 - Limpar terminal\n");
+    printf("3 - Checar Emprestimos\n");
+    printf("4 - Limpar terminal\n");
     printf("0 - Logout\n");
 }
 
@@ -67,14 +68,14 @@ void registrarAdm(int opcao) {
     do {
 
         printf("ADM: ");
-        fgets(nome, 100, stdin);
-        substitui(nome);
+        scanf("%[^\n]", nome);
+        limparbuffer();
 
         do {
             if(counter > 0) printf("Senha invalida!\nDigite novamente!\n");
             else printf("Digite sua senha (6-20 caracteres): ");
-            fgets(senha, 50, stdin);
-            substitui(senha);
+            scanf("%[^\n]", senha);
+            limparbuffer();
             counter++;
         } while(strlen(senha) < 6 || strlen(senha) > 50);
 
@@ -84,7 +85,7 @@ void registrarAdm(int opcao) {
 
     addAdm(nome, senha);
     salvarDados();
-    printf("Adm %s registrado com sucesso!\n", nome);
+    printf("\nAdm %s registrado com sucesso!\n\n", nome);
 }
 
 

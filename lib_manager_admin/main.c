@@ -10,6 +10,7 @@
 #include "libs/livro.h"
 #include "libs/auxiliarfunctions.h"
 #include "libs/emprestimo.h"
+#include "../lib_manager_user/libs/associados.h"
 
 int main(){
 
@@ -17,7 +18,7 @@ int main(){
     libManager();
     bemVindo();
 
-    int opcao;
+    int opcao, logado = 0;
     char nome[100], senha[20];
 
     while(1){
@@ -31,57 +32,53 @@ int main(){
             continue;
         }
 
-        if (opcao == 2){
+        if (opcao == 2) {
+        int logado = 1;
 
-            printf("\nAdm: ");
+        printf("Adm: ");
+        fgets(nome, 100, stdin);
+        substitui(nome);
 
-            fgets(nome, 100, stdin);
-            substitui(nome);
+        char senhaInserida[20];
+        printf("Digite sua senha: ");
+        fgets(senhaInserida, 20, stdin);
+        substitui(senhaInserida);
 
-            Administrador *adm = buscaAdmPorNome(nome);
-
-            if(adm == NULL) {
-                printf("ADMNISTRADOR INEXISTENTE!!\n\n");
-                continue;
-            }
-
-            char senhaInserida[20];
-            
-            printf("Digite sua senha: ");
-            fgets(senhaInserida, 20, stdin);
-            substitui(senhaInserida);
-
-            if(strcmp(senhaInserida, adm->senha) != 0){
-                printf("\nSenha incorreta! Tente novamente.\n");
-                continue;
-            }
-
-            int logado = 1;
-
+        // Uso da função autenticarAdmin para autenticação
+        if (autenticarAdmin(nome, senhaInserida, logado) == -1)  {
+            continue;
+        } else {
             while (logado) {
-                
-                menuLogado(adm->nome);
+                menuLogado(nome);  // nome do administrador logado
 
                 int tarefa = getTarefa();
 
                 if (tarefa == 0) logado = 0;
 
-                if(tarefa == 1) {
+                if (tarefa == 1) {
                     cadlivro();
                     continue;
                 }
 
-                if(tarefa == 2) {
+                if (tarefa == 2) {
                     carregarLivros();
                     listar(qntd_livros);
                     continue;
                 }
+                if (tarefa == 3) {
+                    char nome[100];
+                    listarAssociados();
+                    printf("Checar emprestimos de: ");
+                    scanf("%[^\n]", buscaAdmPorNome(nome));
+                    limparbuffer();
+                    verificarLivrosEmprestados(nome);
+                    continue;
+                }
 
-                if (tarefa == 3) limparTela();
-
+                if (tarefa == 4) limparTela();
             }
-
         }
+    }
     }
     return 0;
 }

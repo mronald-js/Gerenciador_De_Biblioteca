@@ -46,6 +46,9 @@ void carregarLivros(){
     if (fp == NULL) {
         return;
     }
+
+    qntd_livros = 0;  // Redefine o contador para zero
+
     while(!feof(fp)) {
         LIVRO novoLIVRO;
         fscanf(fp, "%[^,],%d,%[^\n]\n", novoLIVRO.titulo, &novoLIVRO.id, novoLIVRO.autor);
@@ -83,8 +86,7 @@ void cadlivro() {
         scanf("%[^\n]", autor);
         limparbuffer();
 
-
-        printf("Livro %s Adicionado a biblioteca!\n", titulo);
+        printf("\nLivro %s Adicionado a biblioteca!\n", titulo);
         addLivro(titulo, id, autor);
     }
 
@@ -93,8 +95,6 @@ void cadlivro() {
 }
 
 void listar(int qtd) {
-
-
 
     int i;
     printf("\nLivros cadastrados:\n");
