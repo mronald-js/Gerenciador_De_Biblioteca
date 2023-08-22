@@ -13,7 +13,8 @@ int getTarefa() {
     int tarefa;
     do {
         scanf("%d", &tarefa);
-    } while (tarefa < 0 || tarefa > 3);
+        limparbuffer();
+    } while (tarefa < 0 || tarefa > 4);
     return tarefa;
 }
 
@@ -30,7 +31,8 @@ void menuLogado(char *nome, char plano) {
     printf("\nOpcoes:\n");
     printf("1 - Exibir Livros\n");
     printf("2 - Solicitar Emprestimo\n");
-    printf("3 - Limpar terminal\n");
+    printf("3 - Realizar Devolucao\n");
+    printf("4 - Limpar terminal\n");
     printf("0 - Logout\n");
 }
 
@@ -64,14 +66,14 @@ void registrarUsuario(int opcao) {
     do {
 
         printf("Digite seu nome de usuario: ");
-        fgets(nome, 100, stdin);
-        substitui(nome);
+        scanf("%[^\n]", &nome);
+        limparbuffer();
 
         do {
             if(counter > 0) printf("Senha invalida!\nDigite novamente!\n");
             else printf("Digite sua senha (6-20 caracteres): ");
-            fgets(senha, 20, stdin);
-            substitui(senha);
+            scanf("%[^\n]", &senha);
+            limparbuffer();
             counter++;
         } while(strlen(senha) < 6 || strlen(senha) > 20);
 

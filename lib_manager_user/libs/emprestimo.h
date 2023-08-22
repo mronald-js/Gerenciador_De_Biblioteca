@@ -20,33 +20,69 @@ void emprestarLivro(char nome[], char titulo[]) {
     strcpy(novoEmprestimo.nomeAssociado, nome);
     strcpy(novoEmprestimo.tituloLivro, titulo);
     emprestimos[numEmprestimos++] = novoEmprestimo;
-    printf("Livro %s emprestado com sucesso para %s!\n", titulo, nome);
+    printf("O Livro %s foi emprestado com sucesso para %s!\n", titulo, nome);
 }
 
-// Função para verificar livros emprestados por um usuário
-void verificarLivrosEmprestados(char nome[]) {
-    printf("Livros emprestados por %s:\n", nome);
-    for (int i = 0; i < numEmprestimos; i++) {
-        if (strcmp(emprestimos[i].nomeAssociado, nome) == 0) {
-            printf("- %s\n", emprestimos[i].tituloLivro);
+void solicitarEmprestimo(char nomeAssociado[]) {
+    char tituloDesejado[tam_max];
+    char tituloArquivo[tam_max];
+    int id;
+    char autor[tam_max];
+    int livroEncontrado = 0;
+
+    // Solicitar o título do livro ao usuário
+    printf("Digite o titulo do livro que deseja pegar emprestado: ");
+    scanf("%[^\n]", &tituloDesejado);
+    limparbuffer();
+
+    // Abrir o arquivo e verificar se o livro está disponível
+    FILE *fp = fopen("../livros/livros.txt", "r");
+
+    if (fp == NULL) {
+        printf("Erro ao acessar a lista de livros.\n");
+        return;
+    }
+
+    while (fscanf(fp, "%[^,],%d,%[^\n]\n", tituloArquivo, &id, autor) != EOF) {
+        if (strcmp(tituloArquivo, tituloDesejado) == 0) {
+            livroEncontrado = 1;
+            break;
         }
     }
+    fclose(fp);
+
+    // Se o livro estiver disponível, realizar o empréstimo
+    if (livroEncontrado)
+        emprestarLivro(nomeAssociado, tituloDesejado);
+    else
+        printf("Desculpe, o livro '%s' nao esta disponivel no momento.\n", tituloDesejado);
 }
 
 // Função para retornar um livro
-void retornarLivro(char nome[], char titulo[]) {
+void retornarLivro(char nomeAssociado[]) {
+    char tituloDesejado[tam_max];
     int found = 0;
+
+    // Solicitar o título do livro que o associado deseja devolver
+    printf("Digite o titulo do livro que deseja realizar devolucao: ");
+    scanf("%[^\n]", tituloDesejado);
+    limparbuffer();
+
+    // Verificar se o livro está na lista de empréstimos
     for (int i = 0; i < numEmprestimos; i++) {
-        if (strcmp(emprestimos[i].nomeAssociado, nome) == 0 && strcmp(emprestimos[i].tituloLivro, titulo) == 0) {
+        if (strcmp(emprestimos[i].nomeAssociado, nomeAssociado) == 0 && strcmp(emprestimos[i].tituloLivro, tituloDesejado) == 0) {
             // Move os empréstimos para preencher a lacuna
             for (int j = i; j < numEmprestimos - 1; j++) {
                 emprestimos[j] = emprestimos[j + 1];
             }
             numEmprestimos--;
             found = 1;
-            printf("Livro %s retornado com sucesso por %s!\n", titulo, nome);
+            printf("\nLivro %s retornado com sucesso por %s!\n", tituloDesejado, nomeAssociado);
             break;
         }
     }
-    if (!found) printf("Não foi possível encontrar o empréstimo do livro %s por %s.\n", titulo, nome);
+
+    if (!found) {
+        printf("Nao foi possível encontrar o emprestimo do livro %s para o associado %s.\n", tituloDesejado, nomeAssociado);
+    }
 }

@@ -39,8 +39,8 @@ int main() {
         if (opcao == 3) {
 
             printf("\nDigite seu nome de usuario: ");
-            fgets(nome, 100, stdin);
-            substitui(nome);
+            scanf("%[^\n]", &nome);
+            limparbuffer();
 
             Associado *associado = buscarAssociadoPorNome(nome);
 
@@ -51,8 +51,8 @@ int main() {
 
             char senhaInserida[20];
             printf("Digite sua senha: ");
-            fgets(senhaInserida, 20, stdin);
-            substitui(senhaInserida);
+            scanf("%[^\n]", &senhaInserida);
+            limparbuffer();
             
             if (strcmp(senhaInserida, associado->senha) != 0) {
                 printf("\nSenha incorreta! Tente novamente.\n");
@@ -74,9 +74,13 @@ int main() {
                 }
                 if (tarefa == 2) {
                     carregarLivros();
-                    // solicitarEmprestimo();
+                    solicitarEmprestimo(associado->nome);
                 }
-                if (tarefa == 3) limparTela();
+                if (tarefa == 3) {
+                    carregarLivros();
+                    retornarLivro(associado->nome);
+                }
+                if (tarefa == 4) limparTela();
             }
         }
     }
