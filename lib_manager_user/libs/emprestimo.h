@@ -32,7 +32,7 @@ void solicitarEmprestimo(char nomeAssociado[]) {
 
     // Solicitar o título do livro ao usuário
     printf("Digite o titulo do livro que deseja pegar emprestado: ");
-    scanf("%[^\n]", &tituloDesejado);
+    scanf("%[^\n]", tituloDesejado);
     limparbuffer();
 
     // Abrir o arquivo e verificar se o livro está disponível

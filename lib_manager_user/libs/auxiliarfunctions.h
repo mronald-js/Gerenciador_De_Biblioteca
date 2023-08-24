@@ -66,13 +66,13 @@ void registrarUsuario(int opcao) {
     do {
 
         printf("Digite seu nome de usuario: ");
-        scanf("%[^\n]", &nome);
+        scanf("%[^\n]", nome);
         limparbuffer();
 
         do {
             if(counter > 0) printf("Senha invalida!\nDigite novamente!\n");
             else printf("Digite sua senha (6-20 caracteres): ");
-            scanf("%[^\n]", &senha);
+            scanf("%[^\n]", senha);
             limparbuffer();
             counter++;
         } while(strlen(senha) < 6 || strlen(senha) > 20);

@@ -39,7 +39,7 @@ int main() {
         if (opcao == 3) {
 
             printf("\nDigite seu nome de usuario: ");
-            scanf("%[^\n]", &nome);
+            scanf("%[^\n]", nome);
             limparbuffer();
 
             Associado *associado = buscarAssociadoPorNome(nome);
@@ -51,7 +51,7 @@ int main() {
 
             char senhaInserida[20];
             printf("Digite sua senha: ");
-            scanf("%[^\n]", &senhaInserida);
+            scanf("%[^\n]", senhaInserida);
             limparbuffer();
             
             if (strcmp(senhaInserida, associado->senha) != 0) {
