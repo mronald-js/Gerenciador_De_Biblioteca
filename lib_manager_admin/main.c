@@ -69,7 +69,7 @@ int main(){
                     char nome[100];
                     listarAssociados();
                     printf("Checar emprestimos de: ");
-                    scanf("%[^\n]", buscaAdmPorNome(nome));
+                    scanf("%[^\n]", nome);
                     limparbuffer();
                     verificarLivrosEmprestados(nome);
                     continue;
